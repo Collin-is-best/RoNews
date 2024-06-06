@@ -11,6 +11,7 @@
     <p id="welcomeMessage"></p>
     <div id="newsContainer"></div>
     <button id="logoutButton">Logout</button>
+    <button id="changePasswordButton">Change Password</button>
     <div id="addNewsSection" style="display: none;">
         <h2>Add News</h2>
         <form id="newsForm">
@@ -20,6 +21,18 @@
             <textarea id="newsContent" required></textarea><br>
             <button type="submit">Add News</button>
         </form>
+    </div>
+    <!-- Change Password Section -->
+    <div id="changePasswordSection" style="display: none;">
+        <h2>Change Password</h2>
+        <form id="changePasswordForm">
+            <label for="oldPassword">Old Password:</label>
+            <input type="password" id="oldPassword" required><br>
+            <label for="newPassword">New Password:</label>
+            <input type="password" id="newPassword" required><br>
+            <button type="submit">Change Password</button>
+        </form>
+        <p id="passwordChangeMessage"></p>
     </div>
     <script>
         const loggedInUser = localStorage.getItem('loggedInUser');
@@ -72,6 +85,29 @@
                 document.getElementById('newsForm').reset();
             });
         }
+
+        // Show change password form
+        document.getElementById('changePasswordButton').addEventListener('click', function() {
+            const changePasswordSection = document.getElementById('changePasswordSection');
+            changePasswordSection.style.display = changePasswordSection.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Change Password functionality
+        document.getElementById('changePasswordForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const user = JSON.parse(localStorage.getItem(loggedInUser));
+
+            if (user.password === oldPassword) {
+                user.password = newPassword;
+                localStorage.setItem(loggedInUser, JSON.stringify(user));
+                document.getElementById('passwordChangeMessage').innerText = 'Password changed successfully.';
+                document.getElementById('changePasswordForm').reset();
+            } else {
+                document.getElementById('passwordChangeMessage').innerText = 'Old password is incorrect.';
+            }
+        });
     </script>
 </body>
 </html>
